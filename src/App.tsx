@@ -2,6 +2,7 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import Header from "./components/ownui/Header";
 import AvatarImg from "@/assets/Avatar_test.png"
 import {EllipsisVertical} from "lucide-react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuShortcut, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 const App=()=>{
   return(
     <main className="w-4/5 pt-3 h-screen mx-auto flex flex-col gap-y-6">
@@ -9,7 +10,7 @@ const App=()=>{
       <section className="w-[90%] mx-auto h-11/12 rounded-4xl flex flex-col gap-y-2">
       <h3 className="text-xl font-bold tracking-tighter">Recommended</h3>
       <div className="content_holder">
-        <div className="post">
+        <div className="post max-w-xl text-balance leading-5.5 flex flex-col gap-y-1.5">
           <div className="post_header flex gap-x-2 items-center">
           <Avatar>
             <AvatarImage src={AvatarImg}/>
@@ -19,8 +20,21 @@ const App=()=>{
           <span className="user_role text-sm leading-3.5">@software engineer</span>
           </div>
           <div className="post_options size-8">
-            <EllipsisVertical className="size-5" />
+            <DropdownMenu>
+              <DropdownMenuTrigger className="cursor-pointer">
+                <EllipsisVertical className="size-5" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem className="cursor-pointer">
+                  Report
+                  <DropdownMenuShortcut></DropdownMenuShortcut>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
+          </div>
+          <div className="post_content">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint temporibus sit in minima enim perferendis vero omnis minus vel debitis.</p>
           </div>
         </div>
       </div>
