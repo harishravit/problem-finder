@@ -56,4 +56,16 @@ public class CommentService {
 
         return commentRepository.save(comment);
     }
+
+    @Transactional
+    public void deleteComment(UUID commentId, String userId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+
+        if (!comment.getAuthor().getId().equals(userId)) {
+            throw new IllegalStateException("Only the author of this comment can delete it.");
+        }
+
+        commentRepository.delete(comment);
+    }
 }

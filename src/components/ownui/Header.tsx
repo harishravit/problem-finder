@@ -1,14 +1,34 @@
+import React, { useState, useEffect } from "react";
 import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/react";
 import { Input } from "@/components/ui/input";
-import { Bell, Search, Sparkles } from "lucide-react";
+import { Search, Sparkles, Sun, Moon } from "lucide-react";
 
 interface HeaderProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
-  onOpenCreate: () => void;
+  onOpenCreate?: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ searchQuery, onSearchChange }) => {
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    return document.documentElement.classList.contains("dark") || 
+      localStorage.getItem("theme") === "dark";
+  });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDarkMode]);
+
+  const toggleTheme = () => {
+    setIsDarkMode((prev) => !prev);
+  };
+
   return (
     <header className="sticky top-2 sm:top-3 z-40 w-full bg-[var(--surface)] border border-[var(--surface-border)] shadow-[var(--surface-shadow)] px-3.5 sm:px-5 py-3 rounded-2xl transition-all">
       <div className="flex items-center justify-between gap-x-3 w-full">
@@ -31,10 +51,18 @@ const Header: React.FC<HeaderProps> = ({ searchQuery, onSearchChange }) => {
         </div>
 
         <div className="flex items-center gap-x-2 sm:gap-x-3 shrink-0">
-          <div className="relative p-1.5 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors cursor-pointer">
-            <span className="absolute top-1 right-1 size-2 bg-orange-500 rounded-full"></span>
-            <Bell className="size-4 sm:size-5" />
-          </div>
+          {/* Dark / Light Mode Toggle Switch */}
+          <button
+            onClick={toggleTheme}
+            title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            className="p-2 text-[var(--muted-foreground)] hover:text-orange-500 hover:bg-[var(--background)] rounded-xl transition-colors cursor-pointer border border-[var(--surface-border)]"
+          >
+            {isDarkMode ? (
+              <Sun className="size-4 sm:size-5 text-orange-400" />
+            ) : (
+              <Moon className="size-4 sm:size-5 text-[var(--foreground)]" />
+            )}
+          </button>
 
           <div className="flex items-center">
             <Show when="signed-out">

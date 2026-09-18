@@ -37,4 +37,17 @@ public class CommentController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteComment(@PathVariable UUID id, Principal principal) {
+        String userId = principal != null ? principal.getName() : "anonymous_user";
+        try {
+            commentService.deleteComment(id, userId);
+            return ResponseEntity.ok(Map.of("message", "Comment deleted successfully"));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(403).body(Map.of("error", e.getMessage()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

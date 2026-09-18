@@ -93,4 +93,16 @@ public class SolutionService {
             return true;
         }
     }
+
+    @Transactional
+    public void deleteSolution(UUID solutionId, String userId) {
+        Solution solution = solutionRepository.findById(solutionId)
+                .orElseThrow(() -> new IllegalArgumentException("Solution not found"));
+
+        if (!solution.getAuthor().getId().equals(userId)) {
+            throw new IllegalStateException("Only the author of this solution can delete it.");
+        }
+
+        solutionRepository.delete(solution);
+    }
 }

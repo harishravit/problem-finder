@@ -11,12 +11,14 @@ interface PostDetailModalProps {
   post: Post | null;
   onClose: () => void;
   onOpenSubmitSolution: (post: Post) => void;
+  onDelete?: (postId: string) => void;
 }
 
 export const PostDetailModal: React.FC<PostDetailModalProps> = ({
   post,
   onClose,
   onOpenSubmitSolution,
+  onDelete,
 }) => {
   const [activeTab, setActiveTab] = useState<"problem" | "solutions" | "discussion">("problem");
   const [solutions, setSolutions] = useState<Solution[]>([]);
@@ -94,12 +96,28 @@ export const PostDetailModal: React.FC<PostDetailModalProps> = ({
               )}
             </div>
 
-            <button
-              onClick={onClose}
-              className="p-1.5 text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-lg transition-colors cursor-pointer"
-            >
-              <X className="size-5" />
-            </button>
+            <div className="flex items-center gap-x-2">
+              {(post.author?.id === "current-user" || post.author?.username === "you") && onDelete ? (
+                <button
+                  onClick={() => {
+                    if (window.confirm("Are you sure you want to delete this problem statement? This action cannot be undone.")) {
+                      onDelete(post.id);
+                      onClose();
+                    }
+                  }}
+                  title="Delete post"
+                  className="p-1.5 text-xs text-red-500 hover:bg-red-500/10 rounded-lg border border-red-500/20 cursor-pointer"
+                >
+                  Delete Post
+                </button>
+              ) : null}
+              <button
+                onClick={onClose}
+                className="p-1.5 text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-lg transition-colors cursor-pointer"
+              >
+                <X className="size-5" />
+              </button>
+            </div>
           </div>
 
           <h2 className="text-base sm:text-xl font-bold text-[var(--foreground)] leading-snug">

@@ -92,4 +92,17 @@ public class PostService {
             return true;
         }
     }
+
+    @Transactional
+    public void deletePost(UUID postId, String userId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+
+        // Only creator can delete
+        if (!post.getAuthor().getId().equals(userId)) {
+            throw new IllegalStateException("Only the creator of this post can delete it.");
+        }
+
+        postRepository.delete(post);
+    }
 }
